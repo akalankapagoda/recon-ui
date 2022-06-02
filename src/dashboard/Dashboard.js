@@ -6,11 +6,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import Orders from './Orders';
-import FileUpload from './FileUpload';
+import SourceFileUpload from './fileupload/SourceFileUpload.js';
+import TargetFileUpload from './fileupload/TargetFileUpload.js';
 
 function Copyright(props) {
   return (
@@ -76,9 +78,9 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="100%" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} justifyContent="center">
               {/* Source File */}
-              <Grid item xs={12} md={4} lg={5}>
+              <Grid item xs={6}>
                 <Paper
                   sx={{
                     p: 2,
@@ -87,11 +89,11 @@ function DashboardContent() {
                     height: 240
                   }}
                 >
-                  <FileUpload title="Select source file" />
+                  <SourceFileUpload title="Select File 1" identifier="source" />
                 </Paper>
               </Grid>
               {/* Target File */}
-              <Grid item xs={12} md={4} lg={5}>
+              <Grid item xs={6}>
                 <Paper
                   sx={{
                     p: 2,
@@ -100,11 +102,30 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <FileUpload title="Select target file" />
+                  <TargetFileUpload title="Select File 2" identifier="target" />
                 </Paper>
               </Grid>
+              {/* Target File */}
+              <Grid item xs={4}></Grid>
+              <Grid item xs={3}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Button variant='contained' color='secondary' xs={3}>Compare</Button>
+                </Paper>
+              </Grid>
+              <Grid item xs={4}></Grid>
               {/* Recent Orders */}
-              <Grid item xs={12}>
+              <Grid item xs={6}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <Orders />
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Orders />
                 </Paper>
