@@ -1,3 +1,7 @@
+/*
+* Note that this is a duplicate of SourceFileUpload.
+* We need to use namespaces to differentiate statuses of similar components if we want to reuse the same component with redux.
+*/
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadFile } from './targetFileUploadSlice';
@@ -12,8 +16,8 @@ import Title from '../Title';
     const dispatch = useDispatch();
 
     const variant = uploadStatus === 'NONE' ? 'outlined' : 'contained';
-    const color = uploadStatus === 'SUCCESS' ? 'success' : 'primary';
-    const label = uploadStatus === 'NONE' ? 'Upload' : uploadStatus === 'SUCCESS' ? 'Success' : 'Error';
+    const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'PENDING' ? 'secondary' : 'error';
+    const label = uploadStatus === 'NONE' ? 'Upload' : uploadStatus === 'SUCCESS' ? 'Success' : uploadStatus === 'PENDING' ? 'Uploading...' : 'Error';
 
     return (
       <React.Fragment>
@@ -28,9 +32,6 @@ import Title from '../Title';
   }
 
   const onFileChange = (event, dispatch) => {
-    dispatch(uploadFile('source', event.target.files[0]));
-    // alert(event.target.files[0]);
-    // Update the state
-    // this.setState({ selectedFile: event.target.files[0] });
+    dispatch(uploadFile(event.target.files[0]));
   
   };

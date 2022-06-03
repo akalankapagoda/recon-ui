@@ -12,8 +12,8 @@ import Title from '../Title';
     const dispatch = useDispatch();
 
     const variant = uploadStatus === 'NONE' ? 'outlined' : 'contained';
-    const color = uploadStatus === 'SUCCESS' ? 'success' : 'primary';
-    const label = uploadStatus === 'NONE' ? 'Upload' : uploadStatus === 'SUCCESS' ? 'Success' : 'Error';
+    const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'PENDING' ? 'secondary' : 'error';
+    const label = uploadStatus === 'NONE' ? 'Upload' : uploadStatus === 'SUCCESS' ? 'Success' : uploadStatus === 'PENDING' ? 'Uploading...' : 'Error';
 
     return (
       <React.Fragment>
@@ -28,5 +28,5 @@ import Title from '../Title';
   }
 
   const onFileChange = (event, dispatch) => {
-    dispatch(uploadFile('source', event.target.files[0]));
+    dispatch(uploadFile(event.target.files[0]));
   };

@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { uploadFileAPI } from '../../api/ReconAPI';
 
 export const uploadFile = createAsyncThunk(
     'sourceFileUpload',
-    async (identifier, file, thunkAPI) => {
-        alert(file);
+    async (file) => {
+        const response = await uploadFileAPI('source', file);
+        return response;
     }
   )
 

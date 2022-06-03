@@ -1,11 +1,15 @@
+/*
+* Note that this is a duplicate of sourceFileUploadSlice.
+* We need to use namespaces to differentiate statuses of similar components if we want to reuse the same component with redux.
+*/
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { uploadFileAPI } from '../../api/ReconAPI';
 
 export const uploadFile = createAsyncThunk(
     'targetFleUpload',
-    async (identifier, file, thunkAPI) => {
-        alert(file);
-    //   const response = await userAPI.fetchById(userId)
-    //   return response.data
+    async (file) => {
+      const response = await uploadFileAPI('source', file);
+      return response;
     }
   )
 
