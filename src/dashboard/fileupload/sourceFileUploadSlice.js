@@ -4,7 +4,7 @@ import { uploadFileAPI } from '../../api/ReconAPI';
 export const uploadFile = createAsyncThunk(
     'sourceFileUpload',
     async (file) => {
-        const response = await uploadFileAPI('source', file);
+        const response = await uploadFileAPI(file.name, file);
         return response;
     }
   )
@@ -12,18 +12,24 @@ export const uploadFile = createAsyncThunk(
 export const sourceFileUploadSlice = createSlice({
   name: 'sourceFileUpload',
   initialState: {
-      uploadStatus : 'NONE'
+      filename: null,
+      uploadStatus : 'NONE',
 
   },
   reducers: {
+    setFilename: (state, action) => {
+      state.filename = action.payload
+    },
+    updateUploadStatus: (state, action) => {
+      state.uploadStatus = action.payload
+    },
   },
   extraReducers: {
     [uploadFile.pending]: (state) => {
-        state.uploadStatus = 'PENDING';
+        state.uploadStatus = 'UPLOADING';
     },
     [uploadFile.fulfilled]: (state, { payload }) => {
-      state.uploadStatus = 'SUCCESS';
-      state.entities = payload;
+      state.uploadStatus = 'UPLOADED';
     },
     [uploadFile.rejected]: (state) => {
         state.uploadStatus = 'FAIL';
@@ -31,7 +37,6 @@ export const sourceFileUploadSlice = createSlice({
   },
 })
 
-// Action creators are generated for each case reducer function
-export const { sourceFileUploadReducer } = sourceFileUploadSlice.actions
+export const { sourceFileUploadReducer, setFilename, updateUploadStatus } = sourceFileUploadSlice.actions
 
 export default sourceFileUploadSlice.reducer

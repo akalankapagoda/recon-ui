@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -13,6 +14,8 @@ import Link from '@mui/material/Link';
 import Orders from './Orders';
 import SourceFileUpload from './fileupload/SourceFileUpload.js';
 import TargetFileUpload from './fileupload/TargetFileUpload.js';
+import { startReconciliation, updateReconStatus } from './DashboardSlice';
+import { checkReconStatusAPI } from '../api/ReconAPI';
 
 function Copyright(props) {
   return (
@@ -50,10 +53,44 @@ const AppBar = styled(MuiAppBar, {
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+
+  const reconStatus = useSelector((state) => state.dashboard.reconStatus);
+  const sourceUploadStatus = useSelector((state) => state.sourceFileUpload.uploadStatus);
+  const targetUploadStatus = useSelector((state) => state.targetFileUpload.uploadStatus);
+  const sourceFilename = useSelector((state) => state.sourceFileUpload.filename);
+  const targetFilename = useSelector((state) => state.targetFileUpload.filename);
+  const dispatch = useDispatch();
+
+  var buttonDisabled = true;
+
+  if (sourceUploadStatus === 'SUCCESS' && targetUploadStatus === 'SUCCESS') {
+    buttonDisabled = false;
+  }
+
+  const color = reconStatus === 'NONE' ? 'primary' : reconStatus === 'SUCCESS' ? 'success' :  reconStatus === 'ERROR' ? 'error' : 'secondary';
+  const label = reconStatus === 'NONE' ? 'Compare' : reconStatus === 'SENDING' ? 'Starting recon' : reconStatus === 'STARTED' ? 'Reconciliation In-Progress' : 'Success';
+
+  if (reconStatus === 'STARTED') {
+    checkReconResults(sourceFilename, targetFilename, dispatch);
+  }
+
+  function compare() {
+    dispatch(startReconciliation([sourceFilename, targetFilename]));
+  }
+
+  async function checkReconResults(sourceFilename, targetFilename, dispatch) {
+    const response = await checkReconStatusAPI(sourceFilename, targetFilename);
+
+    const responseStatus = response.data.status;
+
+    if (responseStatus === 'SUCCESS' || responseStatus === 'ERROR') {
+      dispatch(updateReconStatus(responseStatus));
+    } else { // Try again in another 2 second
+      setTimeout(() => {  
+        checkReconResults(sourceFilename, targetFilename, dispatch); 
+      }, 2000);
+    }
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -115,7 +152,7 @@ function DashboardContent() {
                     flexDirection: 'column',
                   }}
                 >
-                  <Button variant='contained' color='secondary' xs={3}>Compare</Button>
+                  <Button disabled={buttonDisabled} variant='contained' color={color} xs={3} onClick={() => compare()} >{label}</Button>
                 </Paper>
               </Grid>
               <Grid item xs={4}></Grid>

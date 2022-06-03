@@ -1,19 +1,23 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { uploadFile } from './sourceFileUploadSlice';
+import { uploadFile, setFilename, updateUploadStatus } from './SourceFileUploadSlice';
 import Button from '@mui/material/Button'
 import Title from '../Title';
+import { checkUploadStatusAPI } from '../../api/ReconAPI';
 
   export default function SourceFileUpload(props) {
 
-    const identifier = props.identifier;
-
     const uploadStatus = useSelector((state) => state.sourceFileUpload.uploadStatus);
+    const filename = useSelector((state) => state.sourceFileUpload.filename);
     const dispatch = useDispatch();
 
     const variant = uploadStatus === 'NONE' ? 'outlined' : 'contained';
-    const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'PENDING' ? 'secondary' : 'error';
-    const label = uploadStatus === 'NONE' ? 'Upload' : uploadStatus === 'SUCCESS' ? 'Success' : uploadStatus === 'PENDING' ? 'Uploading...' : 'Error';
+    const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'ERROR' ? 'error' : 'secondary';
+    const label = uploadStatus === 'NONE' ? 'Select File to begin' : uploadStatus === 'SUCCESS' ? 'Success' : uploadStatus === 'ERROR' ? 'Error' : 'Uploading...';
+
+    if (uploadStatus === 'UPLOADED') {
+      checkFileProcessingStatus(filename, dispatch);
+    }
 
     return (
       <React.Fragment>
@@ -28,5 +32,21 @@ import Title from '../Title';
   }
 
   const onFileChange = (event, dispatch) => {
-    dispatch(uploadFile(event.target.files[0]));
+    const file = event.target.files[0];
+    dispatch(setFilename(file.name));
+    dispatch(uploadFile(file));
   };
+
+  const checkFileProcessingStatus = async (filename, dispatch) => {
+    const response = await checkUploadStatusAPI(filename);
+
+    const responseStatus = response.data.status;
+
+    if (responseStatus === 'SUCCESS' || responseStatus === 'ERROR') {
+      dispatch(updateUploadStatus(responseStatus));
+    } else { // Try again in another 2 second
+      setTimeout(() => {  
+        checkFileProcessingStatus(filename, dispatch); 
+      }, 2000);
+    }
+  }
