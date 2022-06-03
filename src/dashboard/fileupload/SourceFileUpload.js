@@ -26,7 +26,7 @@ import { checkUploadStatusAPI } from '../../api/ReconAPI';
             label='Select File'>
             <input type="file" onChange={(event) => onFileChange(event, dispatch)} />
         </Button>
-        <Button variant={variant} color={color}>{label}</Button>
+        <Button fullWidth variant={variant} color={color}>{label}</Button>
       </React.Fragment>
     );
   }

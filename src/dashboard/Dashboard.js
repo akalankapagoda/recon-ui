@@ -11,24 +11,11 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
-import Orders from './Orders';
 import SourceFileUpload from './fileupload/SourceFileUpload.js';
 import TargetFileUpload from './fileupload/TargetFileUpload.js';
-import { startReconciliation, updateReconStatus } from './DashboardSlice';
+import { startReconciliation, updateReconStatus, updateReconResults } from './DashboardSlice';
 import { checkReconStatusAPI } from '../api/ReconAPI';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Results from './Results';
 
 const drawerWidth = 240;
 
@@ -55,10 +42,13 @@ const mdTheme = createTheme();
 function DashboardContent() {
 
   const reconStatus = useSelector((state) => state.dashboard.reconStatus);
+  const reconResults = useSelector((state) => state.dashboard.reconResults);
+
   const sourceUploadStatus = useSelector((state) => state.sourceFileUpload.uploadStatus);
   const targetUploadStatus = useSelector((state) => state.targetFileUpload.uploadStatus);
   const sourceFilename = useSelector((state) => state.sourceFileUpload.filename);
   const targetFilename = useSelector((state) => state.targetFileUpload.filename);
+
   const dispatch = useDispatch();
 
   var buttonDisabled = true;
@@ -85,11 +75,20 @@ function DashboardContent() {
 
     if (responseStatus === 'SUCCESS' || responseStatus === 'ERROR') {
       dispatch(updateReconStatus(responseStatus));
+      dispatch(updateReconResults(response.data));
     } else { // Try again in another 2 second
       setTimeout(() => {  
         checkReconResults(sourceFilename, targetFilename, dispatch); 
       }, 2000);
     }
+  }
+
+  let results;
+
+  if (reconStatus === 'SUCCESS' && reconResults) {
+    results = <Results results={reconResults} />;
+  } else {
+    results = <Grid item xs={12}></Grid>;
   }
 
   return (
@@ -156,19 +155,8 @@ function DashboardContent() {
                 </Paper>
               </Grid>
               <Grid item xs={4}></Grid>
-              {/* Recent Orders */}
-              <Grid item xs={6}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
+              {results}
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>
