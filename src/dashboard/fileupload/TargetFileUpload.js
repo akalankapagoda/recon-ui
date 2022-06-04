@@ -3,6 +3,7 @@
 * We need to use namespaces to differentiate statuses of similar components if we want to reuse the same component with redux.
 */
 import * as React from 'react';
+import { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadFile, setFilename, updateUploadStatus } from './TargetFileUploadSlice';
 import Button from '@mui/material/Button'
@@ -11,9 +12,15 @@ import { checkUploadStatusAPI } from '../../api/ReconAPI';
 
   export default function FileUpload(props) {
 
+    const targetRef = useRef();
+
     const uploadStatus = useSelector((state) => state.targetFileUpload.uploadStatus);
     const filename = useSelector((state) => state.targetFileUpload.filename);
     const dispatch = useDispatch();
+
+    if (targetRef.current && uploadStatus === 'NONE') {
+      targetRef.current.value = "";
+    }
 
     const variant = uploadStatus === 'NONE' ? 'outlined' : 'contained';
     const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'ERROR' ? 'error' : 'secondary';
@@ -28,7 +35,7 @@ import { checkUploadStatusAPI } from '../../api/ReconAPI';
         <Title>{props.title}</Title>
         <Button
             label='Select File'>
-            <input type="file" onChange={(event) => onFileChange(event, dispatch)} />
+            <input type="file" ref={targetRef}  onChange={(event) => onFileChange(event, dispatch)} />
         </Button>
         <Button variant={variant} color={color}>{label}</Button>
       </React.Fragment>

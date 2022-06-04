@@ -10,10 +10,11 @@ export const startReconciliation = createAsyncThunk(
   )
 
 export const dashboardSlice = createSlice({
-  name: 'sourceFileUpload',
+  name: 'dashboard',
   initialState: {
       reconStatus : 'NONE',
-      reconResults : null
+      reconResults : null,
+      resetDashboard: false
 
   },
   reducers: {
@@ -22,6 +23,9 @@ export const dashboardSlice = createSlice({
     },
     updateReconResults: (state, action) => {
       state.reconResults = action.payload
+    },
+    resetDashboard: (state, action) => {
+      // Will be handled by the root reducer
     },
   },
   extraReducers: {
@@ -37,6 +41,6 @@ export const dashboardSlice = createSlice({
   },
 })
 
-export const { dashboardReducer, updateReconStatus, updateReconResults } = dashboardSlice.actions
+export const { dashboardReducer, updateReconStatus, updateReconResults, resetDashboard } = dashboardSlice.actions
 
 export default dashboardSlice.reducer

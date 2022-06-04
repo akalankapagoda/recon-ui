@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { uploadFile, setFilename, updateUploadStatus } from './SourceFileUploadSlice';
 import Button from '@mui/material/Button'
@@ -7,9 +8,15 @@ import { checkUploadStatusAPI } from '../../api/ReconAPI';
 
   export default function SourceFileUpload(props) {
 
+    const sourceRef = useRef();
+
     const uploadStatus = useSelector((state) => state.sourceFileUpload.uploadStatus);
     const filename = useSelector((state) => state.sourceFileUpload.filename);
     const dispatch = useDispatch();
+
+    if (sourceRef.current && uploadStatus === 'NONE') {
+      sourceRef.current.value = "";
+    }
 
     const variant = uploadStatus === 'NONE' ? 'outlined' : 'contained';
     const color = uploadStatus === 'NONE' ? 'primary' : uploadStatus === 'SUCCESS' ? 'success' :  uploadStatus === 'ERROR' ? 'error' : 'secondary';
@@ -24,7 +31,7 @@ import { checkUploadStatusAPI } from '../../api/ReconAPI';
         <Title>{props.title}</Title>
         <Button
             label='Select File'>
-            <input type="file" onChange={(event) => onFileChange(event, dispatch)} />
+            <input type="file" ref={sourceRef} onChange={(event) => onFileChange(event, dispatch)} />
         </Button>
         <Button fullWidth variant={variant} color={color}>{label}</Button>
       </React.Fragment>

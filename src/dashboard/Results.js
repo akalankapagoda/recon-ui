@@ -12,7 +12,7 @@ export default function results(props) {
     return (
         <React.Fragment>
             <Grid item xs={12}></Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                     <Title>Results</Title>
                 </Paper>
@@ -20,9 +20,9 @@ export default function results(props) {
             <Grid item xs={12}></Grid>
             <Grid item xs={12}>
                 <Paper elevation={5} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Title>File 1 Records Count : {results.sourceRecordsCount} </Title>
-                    <Title>File 2 Records Count : {results.targetRecordsCount} </Title>
-                    <Title>Match Count : {results.matchCount} </Title>
+                    <Title>{results.source} Records Count : {results.sourceRecordsCount} </Title>
+                    <Title>{results.target} Records Count : {results.targetRecordsCount} </Title>
+                    <Title>Matched Records Count : {results.matchCount} </Title>
                 </Paper>
             </Grid>
             <Grid item xs={12}>

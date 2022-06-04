@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import SourceFileUpload from './fileupload/SourceFileUpload.js';
 import TargetFileUpload from './fileupload/TargetFileUpload.js';
-import { startReconciliation, updateReconStatus, updateReconResults } from './DashboardSlice';
+import { startReconciliation, updateReconStatus, updateReconResults, resetDashboard } from './DashboardSlice';
 import { checkReconStatusAPI } from '../api/ReconAPI';
 import Results from './Results';
 
@@ -68,6 +68,10 @@ function DashboardContent() {
     dispatch(startReconciliation([sourceFilename, targetFilename]));
   }
 
+  function reset() {
+    dispatch(resetDashboard(true));
+  }
+
   async function checkReconResults(sourceFilename, targetFilename, dispatch) {
     const response = await checkReconStatusAPI(sourceFilename, targetFilename);
 
@@ -111,9 +115,10 @@ function DashboardContent() {
         </AppBar>
         <Box
           component="main"
+          sx={{ width: 1 }}
         >
           <Toolbar />
-          <Container maxWidth="100%" sx={{ mt: 4, mb: 4 }}>
+          <Container sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3} justifyContent="center">
               {/* Source File */}
               <Grid item xs={6}>
@@ -141,7 +146,6 @@ function DashboardContent() {
                   <TargetFileUpload title="Select File 2" identifier="target" />
                 </Paper>
               </Grid>
-              {/* Target File */}
               <Grid item xs={4}></Grid>
               <Grid item xs={3}>
                 <Paper
@@ -152,6 +156,19 @@ function DashboardContent() {
                   }}
                 >
                   <Button disabled={buttonDisabled} variant='contained' color={color} xs={3} onClick={() => compare()} >{label}</Button>
+                </Paper>
+              </Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={4}></Grid>
+              <Grid item xs={3}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Button variant='contained' color='secondary' xs={3} onClick={() => reset()} >Reset</Button>
                 </Paper>
               </Grid>
               <Grid item xs={4}></Grid>

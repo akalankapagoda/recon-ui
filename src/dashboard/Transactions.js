@@ -1,15 +1,11 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
-
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 export default function Transactions(props) {
 
@@ -54,7 +50,8 @@ export default function Transactions(props) {
   return (
     <React.Fragment>
       <Title>{props.title}</Title>
-      <Table size="small">
+      <TableContainer sx={{ maxHeight: 440 }}>
+      <Table size="small" stickyHeader >
         <TableHead>
           <TableRow>
             <TableCell>Transaction Id</TableCell>
@@ -76,6 +73,7 @@ export default function Transactions(props) {
           ))}
         </TableBody>
       </Table>
+      </TableContainer>
     </React.Fragment>
   );
 }

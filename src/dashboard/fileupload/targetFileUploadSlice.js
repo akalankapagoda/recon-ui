@@ -36,7 +36,7 @@ extraReducers: {
     state.uploadStatus = 'UPLOADED';
   },
   [uploadFile.rejected]: (state) => {
-      state.uploadStatus = 'FAIL';
+      state.uploadStatus = 'ERROR';
   },
 },
 })
