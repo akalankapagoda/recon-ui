@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Transactions from './Transactions';

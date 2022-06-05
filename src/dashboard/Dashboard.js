@@ -11,8 +11,8 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
-import SourceFileUpload from './fileupload/SourceFileUpload.js';
-import TargetFileUpload from './fileupload/TargetFileUpload.js';
+import SourceFileUpload from './fileupload/SourceFileUpload';
+import TargetFileUpload from './fileupload/TargetFileUpload';
 import { startReconciliation, updateReconStatus, updateReconResults, resetDashboard } from './DashboardSlice';
 import { checkReconStatusAPI } from '../api/ReconAPI';
 import Results from './Results';
